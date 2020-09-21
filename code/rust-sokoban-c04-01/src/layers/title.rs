@@ -1,4 +1,7 @@
-use super::layer::{InputEvent, Layer};
+use super::{
+    game::GameLayer,
+    layer::{InputEvent, Layer},
+};
 use ggez::graphics;
 use ggez::{event::KeyCode, Context, GameResult};
 
@@ -16,7 +19,8 @@ impl Layer for TitleLayer {
     }
 
     fn draw(&self, context: &mut Context) -> GameResult<()> {
-        graphics::clear(context, graphics::Color::new(0.71, 0.9, 0.51, 1.0));
+        // Clearing the screen (this gives us the backround colour)
+        graphics::clear(context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
 
         // renderer::draw_text(context, &String::from("Sokoban"), 50.0, (100.0, 100.0));
 
@@ -48,6 +52,7 @@ impl Layer for TitleLayer {
                     ggez::event::quit(context);
                     Ok(None)
                 }
+                KeyCode::Space => Ok(Some(Box::new(GameLayer::new(context)))),
                 _ => Ok(None),
             },
             _ => Ok(None),

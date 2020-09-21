@@ -2,7 +2,7 @@ use ggez;
 use ggez::event::KeyCode;
 use ggez::event::KeyMods;
 use ggez::{conf, event, Context, GameResult};
-use layers::{layer::Layer, title::TitleLayer};
+use layers::{layer::InputEvent, layer::Layer, title::TitleLayer};
 use std::path;
 
 mod audio;
@@ -29,20 +29,35 @@ impl<'a> Game<'a> {
 
 impl<'a> event::EventHandler for Game<'a> {
     fn update(&mut self, context: &mut Context) -> GameResult {
+        // Change the state to a new one if told by the current layer
+        match self.current_layer.update(context)? {
+            Some(new_state) => self.current_layer = new_state,
+            None => (),
+        }
+
         Ok(())
     }
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
-        Ok(())
+        self.current_layer.draw(context)
     }
 
     fn key_down_event(
         &mut self,
-        _context: &mut Context,
+        context: &mut Context,
         keycode: KeyCode,
         _keymod: KeyMods,
         _repeat: bool,
     ) {
+        // Change the state to a new one if told by the current layer
+        match self
+            .current_layer
+            .on_input_event(context, InputEvent::KeyDown { keycode })
+        {
+            Ok(Some(new_state)) => self.current_layer = new_state,
+            Ok(None) => (),
+            Err(_) => panic!("key_down_event failed"),
+        }
     }
 }
 

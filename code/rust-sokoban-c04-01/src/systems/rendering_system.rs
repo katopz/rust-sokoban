@@ -65,10 +65,6 @@ impl<'a> System<'a> for RenderingSystem<'a> {
 
     fn run(&mut self, data: Self::SystemData) {
         let (gameplay, time, positions, renderables) = data;
-
-        // Clearing the screen (this gives us the backround colour)
-        graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
-
         // Get all the renderables with their positions.
         let rendering_data = (&positions, &renderables).join().collect::<Vec<_>>();
         let mut rendering_batches: HashMap<u8, HashMap<String, Vec<DrawParam>>> = HashMap::new();
@@ -116,9 +112,5 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         self.draw_text(&gameplay.moves_count.to_string(), 525.0, 100.0);
         let fps = format!("FPS: {:.0}", timer::fps(self.context));
         self.draw_text(&fps, 525.0, 120.0);
-
-        // Finally, present the context, this will actually display everything
-        // on the screen.
-        graphics::present(self.context).expect("expected to present");
     }
 }

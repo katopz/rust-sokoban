@@ -53,7 +53,8 @@ impl Layer for GameLayer {
     }
 
     fn draw(&self, context: &mut Context) -> GameResult<()> {
-        graphics::clear(context, graphics::Color::new(0.71, 0.9, 0.51, 1.0));
+        // Clearing the screen (this gives us the backround colour)
+        graphics::clear(context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
 
         // Render game entities
         {
